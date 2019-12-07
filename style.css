@@ -1,0 +1,56 @@
+* { 
+    background-color: black !important;
+    background-image: none !important;
+    color: green !important;
+    border-color: green !important;
+    font-size: 13px !important;
+    font-family: 'Courier New', Courier, monospace !important;
+    font-weight: normal !important;
+    text-transform: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+}
+
+
+body, form, fieldset {
+    visibility: visible !important;
+
+    border: none !important;
+}
+h1, h2, h3, h4, h5, h6
+{
+    color: green !important;
+}
+h4, h5, h6 {
+    font-size: 13px;
+}
+h3 {
+    font-size: 14px;
+}
+h2 {
+    font-size: 15px;
+}
+h1 {
+    font-size: 16px
+}
+img, svg, iframe, picture {
+    display: none !important;
+}
+a {
+    color: green !important;
+}
+li {
+    list-style: none !important;
+}
+button, input, select {
+    background: none !important;
+    border: 1px solid green !important;
+    color: green !important;
+}
+input {
+    cursor: pointer;
+}
+
+  
+ 
+  
