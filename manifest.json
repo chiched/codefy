@@ -4,12 +4,17 @@
     "name": "Codefy",
     "version": "1.0",
   
-    "description": "CHanges the page to you like coe",
+    "description": "Changes the page to look like code",
   
     "icons": {
       "48": "icons/border-48.png"
     },
-  
+    "browser_action": {
+      "default_icon": {
+        "36": "icons/c-36.png"
+      },
+      "default_title": "Codefy the page"
+    },
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
