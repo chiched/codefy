@@ -21,4 +21,5 @@ var setFavicon = function(){
         }
     }     
 }
-setFavicon();
+
+browser.runtime.onMessage.addListener(console.log('message received'));
