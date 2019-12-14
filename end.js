@@ -1,39 +1,48 @@
 
-// disable all CSS
-let cssStatus = true;
+let cssCodefied = false;
+let favUrl = '';
+
 const toggleCss = () => {
+    // create link to external stylesheet
     const cssCollection = document.styleSheets;
-    if (cssStatus === true) {
+    const link = document.createElement('link'); 
+    link.id = 'codefy'
+    link.rel = 'stylesheet';  
+    link.type = 'text/css'; 
+    link.href = browser.runtime.getURL("style.css");
+
+    if (cssCodefied === false) {
+        for (let i = 1; i < cssCollection.length; i++) {
+            cssCollection[i].disabled = true;
+        }
+        document.documentElement.append(link); 
+        cssCodefied = true;
+    } else {
         for (let i = 1; i < cssCollection.length; i++) {
             cssCollection[i].disabled = false;
-            }
-        cssStatus = false;
-    }
-    else {
-        for (let i = 1; i < cssCollection.length; i++) {
-        cssCollection[i].disabled = true;
         }
-        var link = document.createElement('link'); 
-        link.rel = 'stylesheet';  
-        link.type = 'text/css'; 
-        link.href = browser.runtime.getURL("style.css");
-        document.documentElement.append(link); 
-        cssStatus = true;
-    }
+        let element = document.getElementById('codefy');
+        element.parentNode.removeChild(element);
 
+        cssCodefied = false;
+    }
+    setFavicon();
 }
 
 
-var setFavicon = function(){
-    var nodeList = document.getElementsByTagName("link");
-    for (var i = 0; i < nodeList.length; i++)
+const setFavicon = function(){
+    const nodeList = document.getElementsByTagName("link");
+    for (let i = 0; i < nodeList.length; i++)
     {
-        if((nodeList[i].getAttribute("rel") == "icon")||(nodeList[i].getAttribute("rel") == "shortcut icon"))
-        {
-            nodeList[i].setAttribute("href", browser.runtime.getURL("icons/favicon.ico"));
+        if((nodeList[i].getAttribute("rel") == "icon")||(nodeList[i].getAttribute("rel") == "shortcut icon")) {
+            if (cssCodefied === true) {
+                favUrl = nodeList[i].getAttribute("href");
+                nodeList[i].setAttribute("href", browser.runtime.getURL("icons/favicon.ico"));
+            } else {
+                nodeList[i].setAttribute("href", favUrl);
+            }
         }
     }     
 }
 
-var test = function(mess) {console.log(mess)}; 
 browser.runtime.onMessage.addListener(toggleCss);
