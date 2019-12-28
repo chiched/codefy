@@ -30,13 +30,15 @@
         "run_at": "document_end",
         "js": ["end.js"]
       }
-      
     ],
-
     "web_accessible_resources": [
       "style.css",
       "icons/favicon.ico"
+    ],
+    "permissions": [
+      "storage"
     ]
+
   
   }
 

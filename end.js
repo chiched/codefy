@@ -1,8 +1,28 @@
 
-let cssCodefied = false;
+let cssCodefied = '';
 let favUrl = '';
 
+function onTabCreated() {
+    console.log('New tab opened')
+}
+browser.tabs.onCreated.addListener(onTabCreated)
+
+function gotVar(item) {
+    console.log('gotVar activated');
+        toggleCss();
+}
+
+function notGotVar(item) {
+    console.log('noGotVar activated');
+    console.log(item)
+}
+
+browser.storage.local.get()
+.then(gotVar, notGotVar);
+
+
 const toggleCss = () => {
+    console.log('toggleCss started');
     // create link to external stylesheet
     const cssCollection = document.styleSheets;
     const link = document.createElement('link'); 
@@ -17,7 +37,9 @@ const toggleCss = () => {
         }
         document.documentElement.append(link); 
         cssCodefied = true;
-    } else {
+        browser.storage.local.set({codefyValue: true})
+  .then(console.log('local storage set to true'));
+    } else if (cssCodefied === true) {
         for (let i = 1; i < cssCollection.length; i++) {
             cssCollection[i].disabled = false;
         }
@@ -25,8 +47,13 @@ const toggleCss = () => {
         element.parentNode.removeChild(element);
 
         cssCodefied = false;
+        browser.storage.local.set({codefyValue: false})
+        .then(console.log('local storage set to false'));
+    } else {
+        console.log('nothing stored');
     }
     setFavicon();
+    
 }
 
 
@@ -46,3 +73,6 @@ const setFavicon = function(){
 }
 
 browser.runtime.onMessage.addListener(toggleCss);
+
+
+

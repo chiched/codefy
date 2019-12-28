@@ -4,5 +4,5 @@ var sendMessage = (tab) => {
     {message:  "Button clicked" }                                
   )
 };
-
   browser.browserAction.onClicked.addListener(sendMessage);
+  browser.tabs.onUpdated.addListener(sendMessage);
