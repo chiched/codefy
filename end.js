@@ -1,20 +1,16 @@
 
-let cssCodefied = '';
+let cssCodefied = false;
 let favUrl = '';
 
-function onTabCreated() {
-    console.log('New tab opened')
-}
-browser.tabs.onCreated.addListener(onTabCreated)
 
 function gotVar(item) {
     console.log('gotVar activated');
-        toggleCss();
+    console.log(item)
 }
 
 function notGotVar(item) {
     console.log('noGotVar activated');
-    console.log(item)
+    console.log(item);
 }
 
 browser.storage.local.get()
@@ -72,7 +68,13 @@ const setFavicon = function(){
     }     
 }
 
-browser.runtime.onMessage.addListener(toggleCss);
+const checkMsg = (message) => {
+    console.log(message.message);
+    alert(message.message);
+}
+browser.runtime.onMessage.addListener(checkMsg);
+
+// browser.runtime.onMessage.addListener(toggleCss);
 
 
 

@@ -1,8 +1,30 @@
-var sendMessage = (tab) => {
+var sendClick = (tab) => {
+    console.log('sendClick activated');
     browser.tabs.sendMessage(
     tab.id,                   
     {message:  "Button clicked" }                                
   )
 };
-  browser.browserAction.onClicked.addListener(sendMessage);
-  browser.tabs.onUpdated.addListener(sendMessage);
+
+var sendUpdated = (tab) => {
+  console.log('sendUpdated activated');
+  browser.tabs.sendMessage(
+  tab.id,                   
+  {message:  "Tab updated" }                                
+)
+};
+
+var sendCreated = (tab) => {
+  console.log('sendCreated activated');
+  browser.tabs.sendMessage(
+  tab.id,                   
+  {message:  "Tab created" }                                
+)
+};
+  browser.browserAction.onClicked.addListener(sendClick);
+
+  // when navigating to a new url
+  browser.tabs.onUpdated.addListener(sendUpdated);
+
+    // when opening a new tab
+  browser.tabs.onCreated.addListener(sendCreated);
