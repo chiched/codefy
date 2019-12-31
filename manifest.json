@@ -36,7 +36,8 @@
       "icons/favicon.ico"
     ],
     "permissions": [
-      "storage"
+      "storage",
+      "webNavigation"
     ]
 
   

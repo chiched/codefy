@@ -1,25 +1,8 @@
 
-let cssCodefied = false;
 let favUrl = '';
 
 
-function gotVar(item) {
-    console.log('gotVar activated');
-    console.log(item)
-}
-
-function notGotVar(item) {
-    console.log('noGotVar activated');
-    console.log(item);
-}
-
-browser.storage.local.get()
-.then(gotVar, notGotVar);
-
-
-const toggleCss = () => {
-    console.log('toggleCss started');
-    // create link to external stylesheet
+const codefyCss = () => { 
     const cssCollection = document.styleSheets;
     const link = document.createElement('link'); 
     link.id = 'codefy'
@@ -27,31 +10,29 @@ const toggleCss = () => {
     link.type = 'text/css'; 
     link.href = browser.runtime.getURL("style.css");
 
-    if (cssCodefied === false) {
-        for (let i = 1; i < cssCollection.length; i++) {
-            cssCollection[i].disabled = true;
-        }
-        document.documentElement.append(link); 
-        cssCodefied = true;
-        browser.storage.local.set({codefyValue: true})
-  .then(console.log('local storage set to true'));
-    } else if (cssCodefied === true) {
-        for (let i = 1; i < cssCollection.length; i++) {
-            cssCollection[i].disabled = false;
-        }
-        let element = document.getElementById('codefy');
-        element.parentNode.removeChild(element);
-
-        cssCodefied = false;
-        browser.storage.local.set({codefyValue: false})
-        .then(console.log('local storage set to false'));
-    } else {
-        console.log('nothing stored');
+    for (let i = 1; i < cssCollection.length; i++) {
+        cssCollection[i].disabled = true;
     }
+    document.documentElement.append(link); 
+    cssCodefied = true;
+    browser.storage.local.set({codefyValue: true})
+    .then(console.log('local storage set to true'));
     setFavicon();
-    
 }
 
+const unCodefyCss = () => {
+    const cssCollection = document.styleSheets;
+
+    for (let i = 1; i < cssCollection.length; i++) {
+        cssCollection[i].disabled = false;
+    }
+    let element = document.getElementById('codefy');
+    element.parentNode.removeChild(element);
+    cssCodefied = false;
+    browser.storage.local.set({codefyValue: false})
+    .then(console.log('local storage set to false'));
+    setFavicon();
+}
 
 const setFavicon = function(){
     const nodeList = document.getElementsByTagName("link");
@@ -68,13 +49,33 @@ const setFavicon = function(){
     }     
 }
 
-const checkMsg = (message) => {
-    console.log(message.message);
-    alert(message.message);
+
+const toggleCss = () => {
+    browser.storage.local.get()
+    .then(function(response) {
+        console.log(response);
+        if (response.codefyValue === true) {
+            console.log('response is true');
+            unCodefyCss();
+        } else if (response.codefyValue === false) {
+            console.log('response is false');
+            codefyCss();
+        } else {
+            console.log('no value stored');
+        }
+    });
 }
-browser.runtime.onMessage.addListener(checkMsg);
+browser.runtime.onMessage.addListener(toggleCss);
 
-// browser.runtime.onMessage.addListener(toggleCss);
-
-
+window.addEventListener('DOMContentLoaded', (event) => {
+    console.log('dom loaded');
+    browser.storage.local.get()
+    .then(function(response) {
+        if (response.codefyValue === true) {
+            codefyCss();
+        } else {
+            browser.storage.local.set({codefyValue: false})
+        }
+    })
+});
 
