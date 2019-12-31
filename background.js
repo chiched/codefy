@@ -9,21 +9,21 @@ var sendClick = (tab) => {
   )
 };
 
-var sendUpdated = (tab) => {
-  console.log('sendUpdated activated');
-  browser.tabs.sendMessage(
-    tab.tabId,                   
-  {message:  "Tab updated" }                                
-)
-};
+// var sendUpdated = (tab) => {
+//   console.log('sendUpdated activated');
+//   browser.tabs.sendMessage(
+//     tab.tabId,                   
+//   {message:  "Tab updated" }                                
+// )
+// };
 
-var sendCreated = (tab) => {
-  console.log('sendCreated activated');
-  browser.tabs.sendMessage(
-  tab.id,                   
-  {message:  "Tab created" }                                
-)
-};
+// var sendCreated = (tab) => {
+//   console.log('sendCreated activated');
+//   browser.tabs.sendMessage(
+//   tab.id,                   
+//   {message:  "Tab created" }                                
+// )
+// };
   browser.browserAction.onClicked.addListener(sendClick);
 
   // when navigating to a new url

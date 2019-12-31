@@ -1,7 +1,6 @@
 
 let favUrl = '';
 
-
 const codefyCss = () => { 
     const cssCollection = document.styleSheets;
     const link = document.createElement('link'); 
@@ -49,26 +48,20 @@ const setFavicon = function(){
     }     
 }
 
-
 const toggleCss = () => {
     browser.storage.local.get()
     .then(function(response) {
-        console.log(response);
         if (response.codefyValue === true) {
-            console.log('response is true');
             unCodefyCss();
         } else if (response.codefyValue === false) {
-            console.log('response is false');
             codefyCss();
         } else {
-            console.log('no value stored');
         }
     });
 }
 browser.runtime.onMessage.addListener(toggleCss);
 
 window.addEventListener('DOMContentLoaded', (event) => {
-    console.log('dom loaded');
     browser.storage.local.get()
     .then(function(response) {
         if (response.codefyValue === true) {
