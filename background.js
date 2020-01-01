@@ -1,6 +1,7 @@
 var tabID = '';
 
 var sendClick = (tab) => {
+    browser.browserAction.setIcon({path: "icons/favicon-activated-32x32.png"});
     console.log('sendClick activated on tab ' + tab.id);
     tabID = tab.id;
     browser.tabs.sendMessage(
