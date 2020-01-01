@@ -1,36 +1,42 @@
 
 let favUrl = '';
+let cssCodefied = '';
+const cssCollection = document.styleSheets;
 
 const codefyCss = () => { 
-    const cssCollection = document.styleSheets;
     const link = document.createElement('link'); 
     link.id = 'codefy'
     link.rel = 'stylesheet';  
     link.type = 'text/css'; 
     link.href = browser.runtime.getURL("style.css");
-
     for (let i = 1; i < cssCollection.length; i++) {
         cssCollection[i].disabled = true;
     }
     document.documentElement.append(link); 
     cssCodefied = true;
-    browser.storage.local.set({codefyValue: true})
-    .then(console.log('local storage set to true'));
+    browser.storage.local.set({codefyValue: true});
     setFavicon();
+    // check value stored
+    browser.storage.local.get()
+    .then(function(value) {
+        console.log('stored value is: ' + value.codefyValue);
+    });
 }
 
 const unCodefyCss = () => {
-    const cssCollection = document.styleSheets;
-
     for (let i = 1; i < cssCollection.length; i++) {
         cssCollection[i].disabled = false;
     }
     let element = document.getElementById('codefy');
     element.parentNode.removeChild(element);
     cssCodefied = false;
-    browser.storage.local.set({codefyValue: false})
-    .then(console.log('local storage set to false'));
+    browser.storage.local.set({codefyValue: false});
     setFavicon();
+        // check value stored
+        browser.storage.local.get()
+        .then(function(value) {
+            console.log('stored value is: ' + value.codefyValue);
+        });
 }
 
 const setFavicon = function(){
@@ -49,6 +55,7 @@ const setFavicon = function(){
 }
 
 const toggleCss = () => {
+    if (cssCodefied === '') {
     browser.storage.local.get()
     .then(function(response) {
         if (response.codefyValue === true) {
@@ -58,6 +65,11 @@ const toggleCss = () => {
         } else {
         }
     });
+    } else if (cssCodefied === true){
+        unCodefyCss();
+    } else {
+        codefyCss();
+    }
 }
 browser.runtime.onMessage.addListener(toggleCss);
 
