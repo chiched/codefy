@@ -1,14 +1,27 @@
 var tabID = '';
+let status = 'false';
 
 var sendClick = (tab) => {
-    browser.browserAction.setIcon({path: "icons/favicon-activated-32x32.png"});
+    
     console.log('sendClick activated on tab ' + tab.id);
     tabID = tab.id;
     browser.tabs.sendMessage(
     tab.id,                   
     {message:  "Button clicked" }                                
   )
+  toggleIcon();
 };
+
+var toggleIcon = () => {
+  if (status === false) {
+    browser.browserAction.setIcon({path: "icons/favicon-activated-32x32.png"});
+    status = true;
+  } else {
+    browser.browserAction.setIcon({path: "icons/favicon-32x32.png"});
+    status = false;
+  }
+}
+
 
 // var sendUpdated = (tab) => {
 //   console.log('sendUpdated activated');
