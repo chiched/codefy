@@ -3,6 +3,9 @@ let favUrl = '';
 let cssCodefied = '';
 const cssCollection = document.styleSheets;
 
+
+
+
 const codefyCss = () => { 
     const link = document.createElement('link'); 
     link.id = 'codefy'
@@ -21,6 +24,9 @@ const codefyCss = () => {
     .then(function(value) {
         console.log('stored value is: ' + value.codefyValue);
     });
+    browser.runtime.sendMessage({
+        greeting: "Greeting from the content script"
+      });
 }
 
 const unCodefyCss = () => {
@@ -37,6 +43,9 @@ const unCodefyCss = () => {
         .then(function(value) {
             console.log('stored value is: ' + value.codefyValue);
         });
+        browser.runtime.sendMessage({
+            greeting: "Greeting from the content script"
+          });
 }
 
 const setFavicon = function(){
@@ -71,7 +80,15 @@ const toggleCss = () => {
         codefyCss();
     }
 }
-browser.runtime.onMessage.addListener(toggleCss);
+browser.runtime.onMessage.addListener(request => {
+    if (request.action === 'newTab') {
+        return Promise.resolve({response: cssCodefied});
+    } else {
+        toggleCss();
+    }
+});
+    
+
 
 window.addEventListener('DOMContentLoaded', (event) => {
     browser.storage.local.get()
