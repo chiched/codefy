@@ -3,10 +3,8 @@ let favUrl = '';
 let cssCodefied = '';
 const cssCollection = document.styleSheets;
 
-
-
-
-const codefyCss = () => { 
+const codefyCss = (tabId) => { 
+    console.log('codefyCss activated for tabid: ' + tabId);
     const link = document.createElement('link'); 
     link.id = 'codefy'
     link.rel = 'stylesheet';  
@@ -17,34 +15,42 @@ const codefyCss = () => {
     }
     document.documentElement.append(link); 
     cssCodefied = true;
-    browser.storage.local.set({codefyValue: true});
+    let obj = {codefyValue: {[tabId] : true}};
+    browser.storage.local.set(obj);
     setFavicon();
     // check value stored
     browser.storage.local.get()
     .then(function(value) {
-        console.log('stored value is: ' + value.codefyValue);
+        console.log('stored value is: ' + value.codefyValue.tabId);
     });
     browser.runtime.sendMessage({
-        greeting: "Greeting from the content script"
+        message: "setIcon",
+        tabId: tabId
       });
 }
 
-const unCodefyCss = () => {
+const unCodefyCss = (tabId) => {
+    console.log('unCodefyCss activated for tabid: ' + tabId);
     for (let i = 1; i < cssCollection.length; i++) {
         cssCollection[i].disabled = false;
     }
+    console.log('next line should delete the css link');
     let element = document.getElementById('codefy');
+    console.log('element should be :' + element);
     element.parentNode.removeChild(element);
+    console.log('element should be deleted');
     cssCodefied = false;
-    browser.storage.local.set({codefyValue: false});
+    let obj = {codefyValue: {[tabId] : false}};
+    browser.storage.local.set(obj);
     setFavicon();
         // check value stored
         browser.storage.local.get()
         .then(function(value) {
-            console.log('stored value is: ' + value.codefyValue);
+            console.log('stored value is: ' + value.codefyValue.tabId);
         });
         browser.runtime.sendMessage({
-            greeting: "Greeting from the content script"
+            message: "unSetIcon",
+            tabId: tabId
           });
 }
 
@@ -63,41 +69,57 @@ const setFavicon = function(){
     }     
 }
 
-const toggleCss = () => {
+const toggleCss = (tabId) => {
     if (cssCodefied === '') {
     browser.storage.local.get()
     .then(function(response) {
-        if (response.codefyValue === true) {
-            unCodefyCss();
-        } else if (response.codefyValue === false) {
-            codefyCss();
-        } else {
+        if (response.codefyValue.tabId === true) {
+            unCodefyCss(tabId);
+        } else{
+            codefyCss(tabId);
         }
     });
     } else if (cssCodefied === true){
-        unCodefyCss();
+        unCodefyCss(tabId);
     } else {
-        codefyCss();
+        codefyCss(tabId);
     }
 }
-browser.runtime.onMessage.addListener(request => {
-    if (request.action === 'newTab') {
-        return Promise.resolve({response: cssCodefied});
-    } else {
-        toggleCss();
+browser.runtime.onMessage.addListener((request) => {
+    // if (request.action === 'newTab') {
+    //     console.log('newTaaaaaab')
+    //     return Promise.resolve({response: cssCodefied});
+    // } 
+    if (request.action === 'buttonClick') {
+        console.log('button is clicked ' + request.tabId);
+        toggleCss(request.tabId);
+    } else if (request.action === 'tabUpdated') {
+        console.log('message received for tab: ' + request.tabId + ' Action: ' + request.action);
+        browser.storage.local.get()
+        .then(function(response) {
+            console.log(response);
+            console.log(request.tabId);
+            let tabNumb = request.tabId;
+            console.log(response.codefyValue[tabNumb]);
+            if (response.codefyValue[tabNumb] === true) {
+                codefyCss(tabNumb);
+                console.log('success');
+               
+            }
+        });
     }
 });
-    
 
 
-window.addEventListener('DOMContentLoaded', (event) => {
-    browser.storage.local.get()
-    .then(function(response) {
-        if (response.codefyValue === true) {
-            codefyCss();
-        } else {
-            browser.storage.local.set({codefyValue: false})
-        }
-    })
-});
+
+// window.addEventListener('DOMContentLoaded', (event) => {
+//     browser.storage.local.get()
+//     .then(function(response) {
+//         if (response.codefyValue === true) {
+//             codefyCss();
+//         } else {
+//             browser.storage.local.set({codefyValue: false})
+//         }
+//     })
+// });
 

@@ -1,65 +1,45 @@
-var tabID = '';
-let status = false;
+var setIcon = (tabId) => {
+  browser.browserAction.setIcon({path: "icons/favicon-activated-32x32.png", tabId: tabId});
+}
+
+var unsetIcon = (tabId) => {
+  browser.browserAction.setIcon({path: "icons/favicon-32x32.png", tabId: tabId});
+}
 
 var sendClick = (tab) => {
-    tabID = tab.id;
-    browser.tabs.sendMessage(
+  browser.tabs.sendMessage(
     tab.id,                   
-    {action:  "buttonClick" }                                
+    {
+    action:  "buttonClick", 
+    tabId: tab.id 
+    }                                
   );
-  toggleIcon();
 };
 
-var toggleIcon = () => {
-  if (status === false) {
-    setIcon();
-  } else if (status === true) {
-    unsetIcon();
+var checkStatus = (tab, changeInfo) => {
+  console.log('checkStatus activated');
+  console.log(changeInfo);
+  if (changeInfo.status === "complete") {
+    browser.tabs.sendMessage(
+      tab,                   
+      {action:  "tabUpdated", tabId: tab }                                
+    );
   }
-}
-var setIcon = () => {
-  browser.browserAction.setIcon({path: "icons/favicon-activated-32x32.png"});
-  status = true;
-}
-var unsetIcon = () => {
-  browser.browserAction.setIcon({path: "icons/favicon-32x32.png"});
-  status = false;
-}
-var checkStatus = (tab) => {
-  browser.tabs.sendMessage(
-  tab.tabId,                   
-  {action:  "newTab" }                                
-).then(response => {
-    if (response.response === true) {
-      setIcon();
-    } else {
-      unsetIcon();
-    }
-});
+
 };
+
+ var updateIcon = (response) => {
+  console.log(response);
+  if (response.message === 'setIcon') {
+    console.log('should fire setIcon for tab ' + response.tabId);
+    setIcon(response.tabId);
+  } else if (response.message === 'unSetIcon') {
+    console.log('should fire unSetIcon for tab ' + response.tabId);
+    unsetIcon(response.tabId);
+  }
+};  
+
 
   browser.browserAction.onClicked.addListener(sendClick);
-  browser.tabs.onActivated.addListener(checkStatus);
-
-  // browser.runtime.onMessage.addListener(toggleIcon);
-  // when navigating to a new url
-  // browser.webNavigation.onDOMContentLoaded.addListener(sendUpdated);
-
-    // when opening a new tab
-  // browser.tabs.onCreated.addListener(sendCreated);
-
-// var sendUpdated = (tab) => {
-//   console.log('sendUpdated activated');
-//   browser.tabs.sendMessage(
-//     tab.tabId,                   
-//   {message:  "Tab updated" }                                
-// )
-// };
-
-// var sendCreated = (tab) => {
-//   console.log('sendCreated activated');
-//   browser.tabs.sendMessage(
-//   tab.id,                   
-//   {message:  "Tab created" }                                
-// )
-// };
+  browser.tabs.onUpdated.addListener(checkStatus);
+  browser.runtime.onMessage.addListener(updateIcon);
