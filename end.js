@@ -4,7 +4,6 @@ let cssCodefied = '';
 const cssCollection = document.styleSheets;
 
 const codefyCss = (tabId) => { 
-    console.log('codefyCss activated for tabid: ' + tabId);
     const link = document.createElement('link'); 
     link.id = 'codefy'
     link.rel = 'stylesheet';  
@@ -21,7 +20,6 @@ const codefyCss = (tabId) => {
     // check value stored
     browser.storage.local.get()
     .then(function(value) {
-        console.log('stored value is: ' + value.codefyValue.tabId);
     });
     browser.runtime.sendMessage({
         message: "setIcon",
@@ -30,15 +28,11 @@ const codefyCss = (tabId) => {
 }
 
 const unCodefyCss = (tabId) => {
-    console.log('unCodefyCss activated for tabid: ' + tabId);
     for (let i = 1; i < cssCollection.length; i++) {
         cssCollection[i].disabled = false;
     }
-    console.log('next line should delete the css link');
     let element = document.getElementById('codefy');
-    console.log('element should be :' + element);
     element.parentNode.removeChild(element);
-    console.log('element should be deleted');
     cssCodefied = false;
     let obj = {codefyValue: {[tabId] : false}};
     browser.storage.local.set(obj);
@@ -46,7 +40,6 @@ const unCodefyCss = (tabId) => {
         // check value stored
         browser.storage.local.get()
         .then(function(value) {
-            console.log('stored value is: ' + value.codefyValue.tabId);
         });
         browser.runtime.sendMessage({
             message: "unSetIcon",
@@ -91,35 +84,15 @@ browser.runtime.onMessage.addListener((request) => {
     //     return Promise.resolve({response: cssCodefied});
     // } 
     if (request.action === 'buttonClick') {
-        console.log('button is clicked ' + request.tabId);
         toggleCss(request.tabId);
     } else if (request.action === 'tabUpdated') {
-        console.log('message received for tab: ' + request.tabId + ' Action: ' + request.action);
         browser.storage.local.get()
         .then(function(response) {
-            console.log(response);
-            console.log(request.tabId);
             let tabNumb = request.tabId;
-            console.log(response.codefyValue[tabNumb]);
             if (response.codefyValue[tabNumb] === true) {
                 codefyCss(tabNumb);
-                console.log('success');
                
             }
         });
     }
 });
-
-
-
-// window.addEventListener('DOMContentLoaded', (event) => {
-//     browser.storage.local.get()
-//     .then(function(response) {
-//         if (response.codefyValue === true) {
-//             codefyCss();
-//         } else {
-//             browser.storage.local.set({codefyValue: false})
-//         }
-//     })
-// });
-
