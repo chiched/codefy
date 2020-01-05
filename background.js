@@ -1,13 +1,13 @@
 var setIcon = tabId => {
   browser.browserAction.setIcon({
-    path: "icons/favicon-activated-32x32.png",
+    path: "icons/128-green.png",
     tabId: tabId
   });
 };
 
 var unsetIcon = tabId => {
   browser.browserAction.setIcon({
-    path: "icons/favicon-32x32.png",
+    path: "icons/128-white.png",
     tabId: tabId
   });
 };

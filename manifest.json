@@ -1,45 +1,35 @@
 {
+  "manifest_version": 2,
+  "name": "Codefy",
+  "version": "1.0",
 
-    "manifest_version": 2,
-    "name": "Codefy",
-    "version": "1.0",
-  
-    "description": "Changes the page to look like code",
-  
-    "icons": {
-      "48": "icons/favicon-32x32.png"
-    },
-    "browser_action": {
-      "default_icon": {
-        "36": "icons/favicon-32x32.png"
-      },
-      "default_title": "Codefy the page"
-    },
-    "background": {
-      "scripts": ["background.js"]
-    },
-    "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "run_at": "document_start",
-        "js": ["start.js"],
-        "css": ["beforeLoad.css"]
-      },
-      {
-        "matches": ["<all_urls>"],
-        "run_at": "document_end",
-        "js": ["end.js"]
-      }
-    ],
-    "web_accessible_resources": [
-      "style.css",
-      "icons/favicon.ico"
-    ],
-    "permissions": [
-      "storage",
-      "webNavigation"
-    ]
+  "description": "Changes the page to look like code",
 
-  
-  }
-
+  "icons": {
+    "32": "icons/32-green.png",
+    "48": "icons/32-green.png",
+    "96": "icons/32-green.png",
+    "128": "icons/32-green.png"
+  },
+  "browser_action": {
+    "default_icon": {
+      "32": "icons/32-white.png",
+      "48": "icons/32-white.png",
+      "96": "icons/32-white.png",
+      "128": "icons/32-white.png"
+    },
+    "default_title": "Codefy the page"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "run_at": "document_end",
+      "js": ["codefy.js"]
+    }
+  ],
+  "web_accessible_resources": ["style.css", "icons/favicon.ico"],
+  "permissions": ["storage", "webNavigation"]
+}

@@ -61,28 +61,23 @@ const setFavicon = function() {
 };
 
 const toggleCss = tabId => {
-  if (cssCodefied === "") {
-    browser.storage.local.get().then(function(response) {
-      if (response.codefyValue.tabId === true) {
-        unCodefyCss(tabId);
-      } else {
-        codefyCss(tabId);
-      }
-    });
-  } else if (cssCodefied === true) {
-    unCodefyCss(tabId);
-  } else {
+  if (cssCodefied === "" || cssCodefied === false) {
     codefyCss(tabId);
+  } else {
+    unCodefyCss(tabId);
   }
 };
+
 browser.runtime.onMessage.addListener(request => {
   if (request.action === "buttonClick") {
     toggleCss(request.tabId);
   } else if (request.action === "tabUpdated") {
     browser.storage.local.get().then(function(response) {
-      let tabNumb = request.tabId;
-      if (response.codefyValue[tabNumb] === true) {
-        codefyCss(tabNumb);
+      if (typeof response.codefyValue !== "undefined") {
+        let tabNumb = request.tabId;
+        if (response.codefyValue[tabNumb] === true) {
+          codefyCss(tabNumb);
+        }
       }
     });
   }
