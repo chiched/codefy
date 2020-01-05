@@ -17,8 +17,6 @@ var sendClick = (tab) => {
 };
 
 var checkStatus = (tab, changeInfo) => {
-  console.log('checkStatus activated');
-  console.log(changeInfo);
   if (changeInfo.status === "complete") {
     browser.tabs.sendMessage(
       tab,                   
@@ -29,17 +27,13 @@ var checkStatus = (tab, changeInfo) => {
 };
 
  var updateIcon = (response) => {
-  console.log(response);
   if (response.message === 'setIcon') {
-    console.log('should fire setIcon for tab ' + response.tabId);
     setIcon(response.tabId);
   } else if (response.message === 'unSetIcon') {
-    console.log('should fire unSetIcon for tab ' + response.tabId);
     unsetIcon(response.tabId);
   }
 };  
 
-
-  browser.browserAction.onClicked.addListener(sendClick);
-  browser.tabs.onUpdated.addListener(checkStatus);
-  browser.runtime.onMessage.addListener(updateIcon);
+browser.browserAction.onClicked.addListener(sendClick);
+browser.tabs.onUpdated.addListener(checkStatus);
+browser.runtime.onMessage.addListener(updateIcon);
