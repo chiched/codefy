@@ -7,16 +7,16 @@
 
   "icons": {
     "32": "icons/32-green.png",
-    "48": "icons/32-green.png",
-    "96": "icons/32-green.png",
-    "128": "icons/32-green.png"
+    "48": "icons/48-green.png",
+    "96": "icons/96-green.png",
+    "128": "icons/128-green.png"
   },
   "browser_action": {
     "default_icon": {
       "32": "icons/32-white.png",
-      "48": "icons/32-white.png",
-      "96": "icons/32-white.png",
-      "128": "icons/32-white.png"
+      "48": "icons/48-white.png",
+      "96": "icons/96-white.png",
+      "128": "icons/128-white.png"
     },
     "default_title": "Codefy the page"
   },
